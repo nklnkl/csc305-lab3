@@ -1,7 +1,7 @@
-#CSC 305
+# CSC 305
 
-##Prof. Gordonov
-##Lab 3
+## Prof. Gordonov
+## Lab 3
 
 Write a program that will simulate non - preemptive process scheduling algorithms:
 1. FCFS.
