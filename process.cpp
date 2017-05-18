@@ -24,7 +24,7 @@ Process::Process () {}
 
 Process::~Process () {}
 
-int Process::getNumnber () {
+int Process::getNumber () {
   return this->number;
 }
 int Process::getBurstTime () {
