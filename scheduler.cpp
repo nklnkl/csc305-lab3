@@ -91,7 +91,57 @@ void Scheduler::fcfs (std::vector<Process> processes) {
   }
   return;
 }
+
 void Scheduler::sjn (std::vector<Process> processes) {
+
+  // Loop to find the process with the earliest arrival time.
+  int earliest = -1;
+  for (int i = 0; i < processes.size(); i++) {
+    if (earliest == -1 || processes.at(i).getArrivalTime() < processes.at(earliest).getArrivalTime())
+      earliest = j;
+  }
+  // Add earliest to queue, remove from pending list.
+  queue.push_back( processes.at(earliest) );
+  processes.erase( processes.begin() + earliest );
+
+  // Loop through the amount of processes remaining after the initial process.
+  int size = processes.size();
+  for (int i = 0; i < size; i++) {
+
+    int arrivedAndSmaller = -1;
+    /*
+      Loop through the pending processes left to find smallest job that has already arrived.
+      Assign the current if
+        - its arrival time is less than the end time of the previous process already in queue.
+        AND
+        - we have not assigned one OR its burst time, is less than the burst time, of the process previously assigned.
+    */
+    for (int j = 0; j < processes.size(); j++) {
+        bool arrived = ( processes.at(j).getArrivalTime() < queue.back().getEndTime() );
+        bool smaller = ( arrivedAndSmaller == -1 ) || ( processes.at(j).getBurstTime() < processes.at(arrivedAndSmaller).getBurstTime() );
+        if ( arrived && smaller )
+          arrivedAndSmaller = j;
+    }
+
+    // If there is no process that has arrived yet.
+    if (arrivedAndSmaller == -1) {
+      // Loop through the pending processes left to find the earliest job.
+      int nextEarliest = -1;
+      for (int a = 0; a < processes.size(); a++) {
+        if (nextEarliest == -1 || processes.at(a).getArrivalTime() < processes.at(nextEarliest).getArrivalTime())
+          nextEarliest = a;
+      }
+      // Add nextEarliest to queue, remove from pending list.
+      queue.push_back( processes.at(nextEarliest) );
+      processes.erase( processes.begin() + nextEarliest );
+    }
+    // Else if there was a process that has already arrived with the smallest size.
+    else {
+      // Add arrived smallest process to queue, remove from pending list.
+      queue.push_back( processes.at(arrivedAndSmaller) );
+      processes.erase( processes.begin() + arrivedAndSmaller );
+    }
+  }
   return;
 }
 void Scheduler::priority (std::vector<Process> processes) {
