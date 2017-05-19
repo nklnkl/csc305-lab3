@@ -23,7 +23,6 @@ int main () {
   Process p4;
   Scheduler scheduler;
 
-
   /* Pending Processes*/
   p0.setNumber(0);
   p0.setBurstTime(3);
@@ -54,6 +53,21 @@ int main () {
 
   /* Send processes to scheduler */
   scheduler.schedule(algorithm, pending);
+  /* Display algorithm */
+  switch (algorithm) {
+    case 0:
+      cout << "First come first serve";
+      break;
+    case 1:
+      cout << "Shortest job next";
+      break;
+    case 2:
+      cout << "Priority";
+      break;
+    default:
+      cout << "No valid algorithm selected";
+  }
+  cout << endl;
   /* Display schedule queue */
   displaySchedule(scheduler);
 
