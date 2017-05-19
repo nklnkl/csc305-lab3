@@ -104,6 +104,9 @@ void Scheduler::sjn (std::vector<Process> processes) {
   queue.push_back( processes.at(earliest) );
   processes.erase( processes.begin() + earliest );
 
+  // Calculate time of current queue.
+  calculateTime();
+
   // Loop through the amount of processes remaining after the initial process.
   int size = processes.size();
   for (int i = 0; i < size; i++) {
@@ -117,7 +120,7 @@ void Scheduler::sjn (std::vector<Process> processes) {
         - we have not assigned one OR its burst time, is less than the burst time, of the process previously assigned.
     */
     for (int j = 0; j < processes.size(); j++) {
-        bool arrived = ( processes.at(j).getArrivalTime() < queue.back().getEndTime() );
+        bool arrived = ( processes.at(j).getArrivalTime() <= queue.back().getEndTime() );
         bool smaller = ( arrivedAndSmaller == -1 ) || ( processes.at(j).getBurstTime() < processes.at(arrivedAndSmaller).getBurstTime() );
         if ( arrived && smaller )
           arrivedAndSmaller = j;
