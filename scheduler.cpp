@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 #include "process.cpp"
 using namespace std;
 
@@ -12,17 +13,21 @@ public:
   void schedule (int, std::vector<Process>);
   Process get (int);
   int getSize ();
+  float getAverageTurnaround ();
 private:
   std::vector<Process> queue;
   Process nullProcess;
   void fcfs (std::vector<Process>);
   void sjn (std::vector<Process>);
   void priority (std::vector<Process>);
+  void calculateTime ();
+  float averageTurnaround;
 };
 
 #endif
 
 Scheduler::Scheduler () {
+  averageTurnaround = 0;
   return;
 }
 Scheduler::~Scheduler () {
@@ -38,10 +43,17 @@ int Scheduler::getSize () {
   return queue.size();
 }
 
+float Scheduler::getAverageTurnaround () {
+  return averageTurnaround;
+}
+
 /* int algorithm - 0: first come first serve, 1: shortest job next, 2: priority */
 void Scheduler::schedule (int algorithm, std::vector<Process> processes) {
+  // Clear existing queue data.
   queue.clear();
   queue.swap(queue);
+  averageTurnaround = 0;
+
   switch (algorithm) {
     case 0:
       fcfs (processes);
@@ -55,6 +67,8 @@ void Scheduler::schedule (int algorithm, std::vector<Process> processes) {
     default:
       fcfs (processes);
   }
+
+  calculateTime();
   return;
 }
 
@@ -71,40 +85,6 @@ void Scheduler::fcfs (std::vector<Process> processes) {
         earliest = j;
     }
 
-    int waitTime;
-    int startTime;
-    int endTime;
-    int turnaround;
-
-    /*  If first process, it becomes zero.
-        Wait Time = Previous process end time - arrival time.
-        If negative, it becomes zero.
-    */
-    if (i == 0) waitTime = 0;
-    else {
-      waitTime = queue.at(i - 1).getEndTime() - processes.at(earliest).getArrivalTime();
-      if (waitTime < 0) waitTime = 0;
-    }
-
-    /*  If first process, it is zero.
-        Start time = arrival time + wait time.
-    */
-    if (i == 0) startTime = 0;
-    else {
-      startTime = processes.at(earliest).getArrivalTime() + waitTime;
-    }
-
-    /* End time = start time + burst time. */
-    endTime = startTime + processes.at(earliest).getBurstTime();
-
-    /* Turnaround time = end time - arrival time. */
-    turnaround = endTime - processes.at(earliest).getArrivalTime();
-
-    processes.at(earliest).setStartTime(startTime);
-    processes.at(earliest).setEndTime(endTime);
-    processes.at(earliest).setWaitTime(waitTime);
-    processes.at(earliest).setTurnaround(turnaround);
-
     // Add to queue, remove from pending list.
     queue.push_back( processes.at(earliest) );
     processes.erase( processes.begin() + earliest );
@@ -116,4 +96,47 @@ void Scheduler::sjn (std::vector<Process> processes) {
 }
 void Scheduler::priority (std::vector<Process> processes) {
   return;
+}
+
+void Scheduler::calculateTime () {
+  int totalTurnaround = 0;
+  for (int i = 0; i < queue.size(); i++) {
+    int waitTime;
+    int startTime;
+    int endTime;
+    int turnaround;
+
+    /*  If first process, it becomes zero.
+        Wait Time = Previous process end time - arrival time.
+        If negative, it becomes zero.
+    */
+    if (i == 0) waitTime = 0;
+    else {
+      waitTime = queue.at(i - 1).getEndTime() - queue.at(i).getArrivalTime();
+      if (waitTime < 0) waitTime = 0;
+    }
+
+    /*  If first process, it is zero.
+        Start time = arrival time + wait time.
+    */
+    if (i == 0) startTime = 0;
+    else {
+      startTime = queue.at(i).getArrivalTime() + waitTime;
+    }
+
+    /* End time = start time + burst time. */
+    endTime = startTime + queue.at(i).getBurstTime();
+
+    /* Turnaround time = end time - arrival time. */
+    turnaround = endTime - queue.at(i).getArrivalTime();
+    totalTurnaround += turnaround;
+
+    queue.at(i).setStartTime(startTime);
+    queue.at(i).setEndTime(endTime);
+    queue.at(i).setWaitTime(waitTime);
+    queue.at(i).setTurnaround(turnaround);
+  }
+
+  // Calculate average turn around time.
+  averageTurnaround = (float) totalTurnaround / queue.size();
 }

@@ -103,4 +103,6 @@ void displaySchedule (Scheduler & scheduler) {
     cout << endl;
   }
 
+  cout << "Average turnaround time: " << scheduler.getAverageTurnaround() << endl;
+
 }
