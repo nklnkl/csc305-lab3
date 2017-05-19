@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "scheduler.cpp"
 using namespace std;
 
@@ -76,14 +77,27 @@ int main () {
 }
 
 void displaySchedule (Scheduler & scheduler) {
-  // Three space columns.
-  cout << "#   " << "AT  " << "BT  " << "P   " << endl;
-  cout << "----------------" << endl;
+  int columnSize = 13;
+  cout << setw(columnSize) << left << "Queue #";
+  cout << setw(columnSize) << left << "Arrival Time";
+  cout << setw(columnSize) << left << "Burst Time";
+  cout << setw(columnSize) << left << "Priority";
+  cout << setw(columnSize) << left << "Start Time";
+  cout << setw(columnSize) << left << "End Time";
+  cout << setw(columnSize) << left << "Turnaround";
+  cout << endl;
+
+
+
   for (int i = 0; i < scheduler.getSize(); i++) {
-    cout << i << "   ";
-    cout << scheduler.get(i).getArrivalTime() << "   ";
-    cout << scheduler.get(i).getBurstTime() << "   ";
-    cout << scheduler.get(i).getPriority() << "   ";
+    cout << setw(columnSize) << left << i;
+    cout << setw(columnSize) << left << scheduler.get(i).getArrivalTime();
+    cout << setw(columnSize) << left << scheduler.get(i).getBurstTime();
+    cout << setw(columnSize) << left << scheduler.get(i).getPriority();
+    cout << setw(columnSize) << left << scheduler.get(i).getStartTime();
+    cout << setw(columnSize) << left << scheduler.get(i).getEndTime();
+    cout << setw(columnSize) << left << scheduler.get(i).getTurnaround();
     cout << endl;
   }
+
 }
