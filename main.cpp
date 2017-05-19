@@ -84,8 +84,8 @@ void displaySchedule (Scheduler & scheduler) {
   cout << setw(columnSize) << left << "Priority";
   cout << setw(columnSize) << left << "Wait Time";
   cout << setw(columnSize) << left << "Start Time";
-  cout << setw(columnSize) << left << "Turnaround";
   cout << setw(columnSize) << left << "End Time";
+  cout << setw(columnSize) << left << "Turnaround";
   cout << endl;
 
 
@@ -98,8 +98,8 @@ void displaySchedule (Scheduler & scheduler) {
     cout << setw(columnSize) << left << scheduler.get(i).getPriority();
     cout << setw(columnSize) << left << scheduler.get(i).getWaitTime();
     cout << setw(columnSize) << left << scheduler.get(i).getStartTime();
-    cout << setw(columnSize) << left << scheduler.get(i).getTurnaround();
     cout << setw(columnSize) << left << scheduler.get(i).getEndTime();
+    cout << setw(columnSize) << left << scheduler.get(i).getTurnaround();
     cout << endl;
   }
 
