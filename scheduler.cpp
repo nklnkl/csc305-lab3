@@ -21,6 +21,7 @@ private:
   void sjn (std::vector<Process>);
   void priority (std::vector<Process>);
   void calculateTime ();
+  int getEarliestProcess(std::vector<Process>);
   float averageTurnaround;
 };
 
@@ -76,33 +77,20 @@ void Scheduler::fcfs (std::vector<Process> processes) {
   // Loop to add processes.
   int processesSize = processes.size();
   for (int i = 0; i < processesSize; i++) {
-
-    int earliest = -1;
-    // Loop to find earliest process.
-    for (int j = 0; j < processes.size(); j++) {
-      // If we just started or if the current process has earlier arrival time then the previous earliest.
-      if (earliest == -1 || processes.at(j).getArrivalTime() < processes.at(earliest).getArrivalTime())
-        earliest = j;
-    }
-
+    // Get index of earliest process.
+    int e = getEarliestProcess(processes);
     // Add to queue, remove from pending list.
-    queue.push_back( processes.at(earliest) );
-    processes.erase( processes.begin() + earliest );
+    queue.push_back( processes.at(e) );
+    processes.erase( processes.begin() + e );
   }
   return;
 }
 
 void Scheduler::sjn (std::vector<Process> processes) {
-
-  // Loop to find the process with the earliest arrival time.
-  int earliest = -1;
-  for (int i = 0; i < processes.size(); i++) {
-    if (earliest == -1 || processes.at(i).getArrivalTime() < processes.at(earliest).getArrivalTime())
-      earliest = i;
-  }
+  int e = getEarliestProcess(processes);
   // Add earliest to queue, remove from pending list.
-  queue.push_back( processes.at(earliest) );
-  processes.erase( processes.begin() + earliest );
+  queue.push_back( processes.at(e) );
+  processes.erase( processes.begin() + e );
 
   // Calculate time of current queue.
   calculateTime();
@@ -110,6 +98,8 @@ void Scheduler::sjn (std::vector<Process> processes) {
   // Loop through the amount of processes remaining after the initial process.
   int size = processes.size();
   for (int i = 0; i < size; i++) {
+
+    cout << endl << "queue #" << i+1 << endl;
 
     int arrivedAndSmaller = -1;
     /*
@@ -122,6 +112,8 @@ void Scheduler::sjn (std::vector<Process> processes) {
     for (int j = 0; j < processes.size(); j++) {
         bool arrived = ( processes.at(j).getArrivalTime() <= queue.back().getEndTime() );
         bool smaller = ( arrivedAndSmaller == -1 ) || ( processes.at(j).getBurstTime() < processes.at(arrivedAndSmaller).getBurstTime() );
+        cout << "end time of previous queue process: " << queue.back().getEndTime() << endl;
+        cout << "process #" << processes.at(j).getNumber() << ", arrived: " << arrived << ", smaller: " << smaller << endl;
         if ( arrived && smaller )
           arrivedAndSmaller = j;
     }
@@ -179,6 +171,7 @@ void Scheduler::calculateTime () {
 
     /* End time = start time + burst time. */
     endTime = startTime + queue.at(i).getBurstTime();
+    cout << "queue #" << i << ", end time:" << endTime << endl;
 
     /* Turnaround time = end time - arrival time. */
     turnaround = endTime - queue.at(i).getArrivalTime();
@@ -192,4 +185,18 @@ void Scheduler::calculateTime () {
 
   // Calculate average turn around time.
   averageTurnaround = (float) totalTurnaround / queue.size();
+}
+
+/*
+  Takes in a vector of processes.
+  Returns the index number of the process with the earliest arrival time.
+*/
+int Scheduler::getEarliestProcess(std::vector<Process> processes) {
+  // Loop to find the process with the earliest arrival time.
+  int earliest = -1;
+  for (int i = 0; i < processes.size(); i++) {
+    if (earliest == -1 || processes.at(i).getArrivalTime() < processes.at(earliest).getArrivalTime())
+      earliest = i;
+  }
+  return earliest;
 }
