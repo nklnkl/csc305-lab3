@@ -9,14 +9,16 @@ using namespace std;
   1: shortest job next,
   2: priority
 */
-static int algorithm = 0;
+static int algorithm = 1;
+static int columnSize = 13;
 
 void displaySchedule (Scheduler &);
+void displayProcesses (std::vector<Process>);
 
 int main () {
   cout << endl;
 
-  std::vector<Process> pending;
+  std::vector<Process> processes;
   Process p0;
   Process p1;
   Process p2;
@@ -45,30 +47,33 @@ int main () {
   p4.setBurstTime(7);
   p4.setArrivalTime(9);
   p4.setPriority(0);
-  pending.push_back(p0);
-  pending.push_back(p1);
-  pending.push_back(p2);
-  pending.push_back(p3);
-  pending.push_back(p4);
+  processes.push_back(p0);
+  processes.push_back(p1);
+  processes.push_back(p2);
+  processes.push_back(p3);
+  processes.push_back(p4);
   /* Pending Processes*/
 
+  /* Display processes */
+  cout << setfill('-');
+  displayProcesses(processes);
+
   /* Send processes to scheduler */
-  scheduler.schedule(algorithm, pending);
+  scheduler.schedule(algorithm, processes);
   /* Display algorithm */
   switch (algorithm) {
     case 0:
-      cout << "First come first serve";
+      cout << "First come first serve - ";
       break;
     case 1:
-      cout << "Shortest job next";
+      cout << "Shortest job next - ";
       break;
     case 2:
-      cout << "Priority";
+      cout << "Priority - ";
       break;
     default:
-      cout << "No valid algorithm selected";
+      cout << "No valid algorithm selected - ";
   }
-  cout << endl;
   /* Display schedule queue */
   displaySchedule(scheduler);
 
@@ -76,9 +81,28 @@ int main () {
   return 0;
 }
 
+void displayProcesses (std::vector<Process> processes) {
+  cout << "Processes" << endl;
+  cout << setw(columnSize) << left << "ID";
+  cout << setw(columnSize) << left << "Arrival Time";
+  cout << setw(columnSize) << left << "Burst Time";
+  cout << setw(columnSize) << left << "Priority";
+  cout << endl;
+  for (int i = 0; i < processes.size(); i++) {
+    cout << setfill('-');
+    cout << setw(columnSize) << left << processes.at(i).getNumber();
+    cout << setw(columnSize) << left << processes.at(i).getArrivalTime();
+    cout << setw(columnSize) << left << processes.at(i).getBurstTime();
+    cout << setw(columnSize) << left << processes.at(i).getPriority();
+    cout << endl;
+  }
+  cout << endl;
+}
+
 void displaySchedule (Scheduler & scheduler) {
-  int columnSize = 13;
+  cout << "Schedule" << endl;
   cout << setw(columnSize) << left << "Queue #";
+  cout << setw(columnSize) << left << "ID";
   cout << setw(columnSize) << left << "Arrival Time";
   cout << setw(columnSize) << left << "Burst Time";
   cout << setw(columnSize) << left << "Priority";
@@ -88,11 +112,9 @@ void displaySchedule (Scheduler & scheduler) {
   cout << setw(columnSize) << left << "Turnaround";
   cout << endl;
 
-
-
   for (int i = 0; i < scheduler.getSize(); i++) {
-    cout << setfill('-');
     cout << setw(columnSize) << left << i;
+    cout << setw(columnSize) << left << scheduler.get(i).getNumber();
     cout << setw(columnSize) << left << scheduler.get(i).getArrivalTime();
     cout << setw(columnSize) << left << scheduler.get(i).getBurstTime();
     cout << setw(columnSize) << left << scheduler.get(i).getPriority();

@@ -98,7 +98,7 @@ void Scheduler::sjn (std::vector<Process> processes) {
   int earliest = -1;
   for (int i = 0; i < processes.size(); i++) {
     if (earliest == -1 || processes.at(i).getArrivalTime() < processes.at(earliest).getArrivalTime())
-      earliest = j;
+      earliest = i;
   }
   // Add earliest to queue, remove from pending list.
   queue.push_back( processes.at(earliest) );
