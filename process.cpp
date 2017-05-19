@@ -8,6 +8,7 @@ private:
   int priority;
   int startTime;
   int endTime;
+  int waitTime;
   int turnaround;
 public:
   Process();
@@ -18,6 +19,7 @@ public:
   int getPriority ();
   int getStartTime ();
   int getEndTime ();
+  int getWaitTime ();
   int getTurnaround ();
   void setNumber (int);
   void setBurstTime (int);
@@ -25,6 +27,7 @@ public:
   void setPriority (int);
   void setStartTime (int);
   void setEndTime (int);
+  void setWaitTime (int);
   void setTurnaround (int);
 };
 #endif
@@ -50,6 +53,9 @@ int Process::getStartTime () {
 }
 int Process::getEndTime () {
   return this->endTime;
+}
+int Process::getWaitTime () {
+  return this->waitTime;
 }
 int Process::getTurnaround () {
   return this->turnaround;
@@ -77,6 +83,10 @@ void Process::setStartTime (int startTime) {
 }
 void Process::setEndTime (int endTime) {
   this->endTime = endTime;
+  return;
+}
+void Process::setWaitTime (int waitTime) {
+  this->waitTime = waitTime;
   return;
 }
 void Process::setTurnaround (int turnaround) {

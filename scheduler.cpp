@@ -61,7 +61,8 @@ void Scheduler::schedule (int algorithm, std::vector<Process> processes) {
 void Scheduler::fcfs (std::vector<Process> processes) {
   // Loop to add processes.
   int processesSize = processes.size();
-  for (int i = 0; i < processesSize ; i++) {
+  for (int i = 0; i < processesSize; i++) {
+
     int earliest = -1;
     // Loop to find earliest process.
     for (int j = 0; j < processes.size(); j++) {
@@ -69,6 +70,41 @@ void Scheduler::fcfs (std::vector<Process> processes) {
       if (earliest == -1 || processes.at(j).getArrivalTime() < processes.at(earliest).getArrivalTime())
         earliest = j;
     }
+
+    int waitTime;
+    int startTime;
+    int endTime;
+    int turnaround;
+
+    /*  If first process, it becomes zero.
+        Wait Time = Previous process end time - arrival time.
+        If negative, it becomes zero.
+    */
+    if (i == 0) waitTime = 0;
+    else {
+      waitTime = queue.at(i - 1).getEndTime() - processes.at(earliest).getArrivalTime();
+      if (waitTime < 0) waitTime = 0;
+    }
+
+    /*  If first process, it is zero.
+        Start time = arrival time + wait time.
+    */
+    if (i == 0) startTime = 0;
+    else {
+      startTime = processes.at(earliest).getArrivalTime() + waitTime;
+    }
+
+    /* End time = start time + burst time. */
+    endTime = startTime + processes.at(earliest).getBurstTime();
+
+    /* Turnaround time = end time - arrival time. */
+    turnaround = endTime - processes.at(earliest).getArrivalTime();
+
+    processes.at(earliest).setStartTime(startTime);
+    processes.at(earliest).setEndTime(endTime);
+    processes.at(earliest).setWaitTime(waitTime);
+    processes.at(earliest).setTurnaround(turnaround);
+
     // Add to queue, remove from pending list.
     queue.push_back( processes.at(earliest) );
     processes.erase( processes.begin() + earliest );
