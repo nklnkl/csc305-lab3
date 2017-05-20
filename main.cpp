@@ -12,55 +12,58 @@ using namespace std;
 static int algorithm = 0;
 static int columnSize = 13;
 
-void displaySchedule (Scheduler &);
-void displayProcesses (std::vector<Process>);
+void displaySchedule (Scheduler &, bool);
 
 int main () {
   cout << endl;
 
-  std::vector<Process> processes;
+  Scheduler scheduler;
   Process p0;
   Process p1;
   Process p2;
   Process p3;
   Process p4;
-  Scheduler scheduler;
 
   /* Pending Processes*/
   p0.setNumber(0);
   p0.setBurstTime(3);
   p0.setArrivalTime(0);
   p0.setPriority(0);
+
   p1.setNumber(1);
   p1.setBurstTime(5);
-  p1.setArrivalTime(3);
+  p1.setArrivalTime(8);
   p1.setPriority(0);
+
   p2.setNumber(2);
   p2.setBurstTime(3);
-  p2.setArrivalTime(5);
+  p2.setArrivalTime(2);
   p2.setPriority(0);
+
   p3.setNumber(3);
   p3.setBurstTime(2);
-  p3.setArrivalTime(6);
+  p3.setArrivalTime(1);
   p3.setPriority(0);
+
   p4.setNumber(4);
   p4.setBurstTime(7);
   p4.setArrivalTime(9);
   p4.setPriority(0);
-  processes.push_back(p0);
-  processes.push_back(p1);
-  processes.push_back(p2);
-  processes.push_back(p3);
-  processes.push_back(p4);
+  scheduler.add(p0);
+  scheduler.add(p1);
+  scheduler.add(p2);
+  scheduler.add(p3);
+  scheduler.add(p4);
   /* Pending Processes*/
 
   /* Display processes */
   cout << setfill('-');
-  displayProcesses(processes);
+  displaySchedule(scheduler, false);
 
   /* Send processes to scheduler */
-  scheduler.schedule(algorithm, processes);
+  scheduler.schedule(algorithm);
   /* Display algorithm */
+  cout << endl;
   switch (algorithm) {
     case 0:
       cout << "First come first serve - ";
@@ -75,41 +78,24 @@ int main () {
       cout << "No valid algorithm selected - ";
   }
   /* Display schedule queue */
-  displaySchedule(scheduler);
+  displaySchedule(scheduler, true);
 
   cout << endl;
   return 0;
 }
 
-void displayProcesses (std::vector<Process> processes) {
-  cout << "Processes" << endl;
+void displaySchedule (Scheduler & scheduler, bool sorted) {
+  if (sorted) cout << "Schedule - Queue in order" << endl;
+  else cout << "Processes - Not in order" << endl;
+  cout << setw(columnSize) << left << "#";
   cout << setw(columnSize) << left << "ID";
   cout << setw(columnSize) << left << "Arrival Time";
   cout << setw(columnSize) << left << "Burst Time";
   cout << setw(columnSize) << left << "Priority";
-  cout << endl;
-  for (int i = 0; i < processes.size(); i++) {
-    cout << setfill('-');
-    cout << setw(columnSize) << left << processes.at(i).getNumber();
-    cout << setw(columnSize) << left << processes.at(i).getArrivalTime();
-    cout << setw(columnSize) << left << processes.at(i).getBurstTime();
-    cout << setw(columnSize) << left << processes.at(i).getPriority();
-    cout << endl;
-  }
-  cout << endl;
-}
-
-void displaySchedule (Scheduler & scheduler) {
-  cout << "Schedule" << endl;
-  cout << setw(columnSize) << left << "Queue #";
-  cout << setw(columnSize) << left << "ID";
-  cout << setw(columnSize) << left << "Arrival Time";
-  cout << setw(columnSize) << left << "Burst Time";
-  cout << setw(columnSize) << left << "Priority";
-  cout << setw(columnSize) << left << "Wait Time";
-  cout << setw(columnSize) << left << "Start Time";
-  cout << setw(columnSize) << left << "End Time";
-  cout << setw(columnSize) << left << "Turnaround";
+  if (sorted) cout << setw(columnSize) << left << "Wait Time";
+  if (sorted) cout << setw(columnSize) << left << "Start Time";
+  if (sorted) cout << setw(columnSize) << left << "End Time";
+  if (sorted) cout << setw(columnSize) << left << "Turnaround";
   cout << endl;
 
   for (int i = 0; i < scheduler.getSize(); i++) {
@@ -118,13 +104,13 @@ void displaySchedule (Scheduler & scheduler) {
     cout << setw(columnSize) << left << scheduler.get(i).getArrivalTime();
     cout << setw(columnSize) << left << scheduler.get(i).getBurstTime();
     cout << setw(columnSize) << left << scheduler.get(i).getPriority();
-    cout << setw(columnSize) << left << scheduler.get(i).getWaitTime();
-    cout << setw(columnSize) << left << scheduler.get(i).getStartTime();
-    cout << setw(columnSize) << left << scheduler.get(i).getEndTime();
-    cout << setw(columnSize) << left << scheduler.get(i).getTurnaround();
+    if (sorted) cout << setw(columnSize) << left << scheduler.get(i).getWaitTime();
+    if (sorted) cout << setw(columnSize) << left << scheduler.get(i).getStartTime();
+    if (sorted) cout << setw(columnSize) << left << scheduler.get(i).getEndTime();
+    if (sorted) cout << setw(columnSize) << left << scheduler.get(i).getTurnaround();
     cout << endl;
   }
 
-  cout << "Average turnaround time: " << scheduler.getAverageTurnaround() << endl;
+  if (sorted) cout << endl << "Average turnaround time: " << scheduler.getAverageTurnaround() << endl;
 
 }
