@@ -78,15 +78,29 @@ void Scheduler::schedule (int algorithm) {
 void Scheduler::fcfs () {
   for (int i = 0; i < queue.size(); i++) {
     for (int j = 0; j < queue.size() - 1; j++) {
+      // If arrival time is higher (meaning later), move towards the back.
       if ( queue.at(j).getArrivalTime() > queue.at(j+1).getArrivalTime() )
         std::iter_swap(queue.begin()+j, queue.begin()+j+1);
     }
   }
+  return;
 }
 
 void Scheduler::sjn () {
 }
 void Scheduler::priority () {
+  for (int i = 0; i < queue.size(); i++) {
+    for (int j = 0; j < queue.size() - 1; j++) {
+      // If priority number is higher (meaning less important), move towards the back.
+      if ( queue.at(j).getPriority() > queue.at(j+1).getPriority() )
+        std::iter_swap(queue.begin()+j, queue.begin()+j+1);
+      // If the priority is the same.
+      if ( queue.at(j).getPriority() == queue.at(j+1).getPriority() )
+        // Check the arrival time next.
+        if ( queue.at(j).getArrivalTime() > queue.at(j+1).getArrivalTime() )
+          std::iter_swap(queue.begin()+j, queue.begin()+j+1);
+    }
+  }
   return;
 }
 

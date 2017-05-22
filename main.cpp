@@ -9,7 +9,7 @@ using namespace std;
   1: shortest job next,
   2: priority
 */
-static int algorithm = 0;
+static int algorithm = 2;
 static int columnSize = 13;
 
 void displaySchedule (Scheduler &, bool);
@@ -28,27 +28,27 @@ int main () {
   p0.setNumber(0);
   p0.setBurstTime(3);
   p0.setArrivalTime(0);
-  p0.setPriority(0);
+  p0.setPriority(2);
 
   p1.setNumber(1);
   p1.setBurstTime(5);
   p1.setArrivalTime(8);
-  p1.setPriority(0);
+  p1.setPriority(1);
 
   p2.setNumber(2);
   p2.setBurstTime(3);
   p2.setArrivalTime(2);
-  p2.setPriority(0);
+  p2.setPriority(1);
 
   p3.setNumber(3);
   p3.setBurstTime(2);
   p3.setArrivalTime(1);
-  p3.setPriority(0);
+  p3.setPriority(4);
 
   p4.setNumber(4);
   p4.setBurstTime(7);
   p4.setArrivalTime(9);
-  p4.setPriority(0);
+  p4.setPriority(3);
   scheduler.add(p0);
   scheduler.add(p1);
   scheduler.add(p2);
